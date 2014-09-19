@@ -2,14 +2,17 @@ package com.nirhart.parallaxscroll.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 
 public class ParallaxListView extends ListView {
 
 	private ParallaxListViewHelper helper;
+    View parallaxedView;
+    boolean isScrollEnabled = true;
 
-	public ParallaxListView(Context context, AttributeSet attrs, int defStyle) {
+    public ParallaxListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init(context, attrs);
 	}
@@ -32,10 +35,27 @@ public class ParallaxListView extends ListView {
 	public void addParallaxedHeaderView(View v) {
 		super.addHeaderView(v);
 		helper.addParallaxedHeaderView(v);
+        parallaxedView = v;
 	}
 
 	public void addParallaxedHeaderView(View v, Object data, boolean isSelectable) {
 		super.addHeaderView(v, data, isSelectable);
 		helper.addParallaxedHeaderView(v, data, isSelectable);
+        parallaxedView = v;
 	}
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return isScrollEnabled ? super.dispatchTouchEvent(ev) : parallaxedView.dispatchTouchEvent(ev);
+    }
+
+
+    public boolean isScrollEnabled() {
+        return isScrollEnabled;
+    }
+
+    public void setScrollEnabled(boolean isScrollEnabled) {
+        this.isScrollEnabled = isScrollEnabled;
+    }
+    
 }
